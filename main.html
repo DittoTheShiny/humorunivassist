@@ -1,0 +1,135 @@
+﻿<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=375, user-scalable=yes">
+    <title>웃긴대학 난민대피소 어시텍스트 만들기</title>
+    <style>
+        /*
+        #AssiMob {
+            position: absolute;
+            top: 300px;
+            width: 600px;
+            height: 121.3px;
+        }
+
+        #AssiPC {
+            position: absolute;
+            top: 450px;
+            width: 600px;
+            height: 54.5px;
+        }
+        */
+
+        h5 {
+            text-align: right;
+        }
+
+        #honeybread {
+            position: relative;
+        }
+
+        #img {
+            position: relative;
+            width: 200px;
+            top: 160px;
+        }
+
+        #txt {
+            position: relative;
+        }
+    </style>
+    <script>
+        window.onload = function () {
+            document.getElementById("calculate").onclick = processInterval;
+        }
+
+
+        function processInterval() {
+            // 작성시간
+            var time1_Year = document.getElementById("WriteTime").value.slice(0, 4);
+            var time1_Month = document.getElementById("WriteTime").value.slice(5, 7);
+            var time1_Day = document.getElementById("WriteTime").value.slice(8, 10);
+            var time1_Hour = document.getElementById("WriteTime").value.slice(11, 13);
+            var time1_Minute = document.getElementById("WriteTime").value.slice(14, 16);
+            var time1 = time1_Year + "-" + time1_Month + "-" + time1_Day + " " + time1_Hour + ":" + time1_Minute;
+            var time1_txt = time1_Year + "." + time1_Month + "." + time1_Day + ". " + time1_Hour + ":" + time1_Minute;
+
+            // 이동시간
+            var time2_Year = document.getElementById("MoveTime").value.slice(0, 4);
+            var time2_Month = document.getElementById("MoveTime").value.slice(5, 7);
+            var time2_Day = document.getElementById("MoveTime").value.slice(8, 10);
+            var time2_Hour = document.getElementById("MoveTime").value.slice(11, 13);
+            var time2_Minute = document.getElementById("MoveTime").value.slice(14, 16);
+            var time2 = time2_Year + "-" + time2_Month + "-" + time2_Day + " " + time2_Hour + ":" + time2_Minute;
+            var time2_txt = time2_Year + "." + time2_Month + "." + time2_Day + ". " + time2_Hour + ":" + time2_Minute + "\n";
+
+
+            // 이동 시간 계산
+            var WriteTimeinDate = new Date(time1);
+            var MoveTimeinDate = new Date(time2);
+            var Interval = MoveTimeinDate - WriteTimeinDate;
+            var Interval_Date = Math.floor((new Date(time2) - new Date(time1)) / 86400000);
+            var Interval_Hour = Math.floor((Interval % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            var Interval_Minute = Math.floor((Interval % (1000 * 60 * 60)) / (1000 * 60));
+            if (Interval_Date != 0) {
+                var MoveTxt = "게시물이 " + Interval_Date + "일 " + Interval_Hour + "시간 " + Interval_Minute + "분 만에 웃긴자료 게시판으로 이동되었습니다!\n";
+            }
+            else if (Interval_Date == 0 && Interval_Hour != 0) {
+                var MoveTxt = "게시물이 " + Interval_Hour + "시간 " + Interval_Minute + "분 만에 웃긴자료 게시판으로 이동되었습니다!\n";
+            }
+            else if (Interval_Date == 0 && Interval_Hour == 0) {
+                var MoveTxt = "게시물이 " + Interval_Minute + "분 만에 웃긴자료 게시판으로 이동되었습니다!\n";
+            }
+            else {
+                var MoveTxt = "게시물이 웃긴자료 게시판으로 이동되었습니다!\n";
+            }
+            // generate HTML version of text
+            var txtBox = document.getElementById("inputbox");
+            var lines = txtBox.value.split("\n");
+            for (var i = 0; i < lines.length; i++) {
+                var assist = "어시스트 : " + lines[i];
+            }
+
+            var blk1 = document.getElementById("resultTime");
+            blk1.innerHTML = MoveTxt + "작성 : " + time1_txt + " / " + "이동 : " + time2_txt + assist;
+
+            var obj = document.getElementById("resultTime");
+            obj.select();
+            obj.setSelectionRange(0, 99999);
+            document.execCommand("copy");
+        }
+    </script>
+</head>
+<body>
+    <h1>웃긴대학 난민대피소 <br /> 어시텍스트 만들기</h1>
+    <!--작성시간 / 이동시간-->
+    <h4>작성시간</h4>
+    <input type="datetime-local" id='WriteTime' />
+    <h4>이동시간</h4>
+    <input type="datetime-local" id='MoveTime' />
+    <script>
+        var currentTime = new Date();
+        var localTime = new Date(currentTime.getTime() + currentTime.getTimezoneOffset() * -60000).toISOString().slice(0, 16);
+        document.getElementById('WriteTime').value = localTime;
+        document.getElementById('MoveTime').value = localTime;
+    </script>
+
+    <!--어시스트-->
+    <h4>어시스트</h4>
+    <textarea id="inputbox" cols="29" rows="1" placeholder="어시스트 닉네임"></textarea>
+    <div>
+        <button id="calculate">출력</button>
+    </div>
+
+    <!--결과 텍스트-->
+    <h4>결과</h4>
+    <textarea id="resultTime" cols="70" rows="3" placeholder="게시물이 d일 h시간 m분 만에 웃긴자료 게시판으로 이동되었습니다!&#13;&#10;작성 : yyyy.mm.dd. hh:mm / 이동 : yyyy.mm.dd. hh:mm&#13;&#10;어시스트 : 메타몽몽"></textarea>
+
+    <!--
+    <img id="AssiMob" srcset="AssiMob.png 1x">
+    <img id="AssiPC" srcset="AssiPC.png 1x">
+    -->
+
+</body>
+</html>
